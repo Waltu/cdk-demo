@@ -25,7 +25,7 @@ describe("events", () => {
         expect(parsedResponse.body).toContain("id");
     });
 
-    test('should return 400 when valid body', async () => {
+    test('should return 400 when invalid body', async () => {
         const body = JSON.stringify({ type: "embed_123" });
         const res = await events.add(getAPIGatewayMock({ body }));
 

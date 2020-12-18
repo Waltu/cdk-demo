@@ -73,7 +73,7 @@ export async function getReportBySource(req: APIGatewayProxyEventV2): Promise<AP
     const source = req.queryStringParameters?.source;
     const day = req.queryStringParameters?.day
 
-    if (!source && day) {
+    if (!source && !day) {
       return {
         statusCode: 400,
         body: 'Missing query parameters'
@@ -122,7 +122,6 @@ export async function getReportBySource(req: APIGatewayProxyEventV2): Promise<AP
       let viewCount = 1;
 
       // Create aggregation row if it doesn't exists
-      // TODO: Replace update to use atomic counter
       if (!aggregatedResult.Item) {
         await dynamoClient.put({
           TableName: process.env.TABLE_NAME!,
@@ -136,6 +135,7 @@ export async function getReportBySource(req: APIGatewayProxyEventV2): Promise<AP
         viewCount = aggregatedResult.Item.ViewCount + 1;
       }
       
+      // TODO: Replace update to use atomic counter
       const update = dynamoClient.update({
         TableName: process.env.TABLE_NAME!,
         Key: {

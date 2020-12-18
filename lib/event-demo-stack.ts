@@ -30,7 +30,7 @@ export class EventDemoStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'eventTableName', {value: eventTable.tableName});
 
-    const postFunction = new lambdaNode.NodejsFunction(this, 'AddFunction', {
+    const addEventFunction = new lambdaNode.NodejsFunction(this, 'AddFunction', {
       runtime: lambda.Runtime.NODEJS_12_X,
       handler: 'add',
       entry: __dirname + '/../lambda/lib/events.ts',
@@ -39,7 +39,7 @@ export class EventDemoStack extends cdk.Stack {
       },
     });
 
-    eventTable.grantReadWriteData(postFunction);
+    eventTable.grantReadWriteData(addEventFunction);
 
     const updateAggregation = new lambdaNode.NodejsFunction(this, 'UpdateAggregation', {
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -59,7 +59,7 @@ export class EventDemoStack extends cdk.Stack {
 
     eventTable.grantReadWriteData(updateAggregation);
     
-    const getFunction = new lambdaNode.NodejsFunction(this, 'GetReportFunction', {
+    const getReportFunction = new lambdaNode.NodejsFunction(this, 'GetReportFunction', {
       runtime: lambda.Runtime.NODEJS_12_X,
       handler: 'getReportBySource',
       entry: __dirname + '/../lambda/lib/events.ts',
@@ -68,7 +68,7 @@ export class EventDemoStack extends cdk.Stack {
       },
     });
  
-    eventTable.grantReadData(getFunction);
+    eventTable.grantReadData(getReportFunction);
 
     const api = new apiGW.HttpApi(this, 'EventAPI');
     new cdk.CfnOutput(this, 'ApiUrl', {value: api.url!});
@@ -80,7 +80,7 @@ export class EventDemoStack extends cdk.Stack {
     });
 
     api.addRoutes({
-      path: '/events/reports',
+      path: '/reports/events',
       methods: [apiGW.HttpMethod.GET],
       integration: new apiGWIntegrations.LambdaProxyIntegration({handler: getFunction})
     });
