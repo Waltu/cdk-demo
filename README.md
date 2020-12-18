@@ -5,4 +5,4 @@ Getting familiar with how to run a couple of lambdas with dynamoDB. It receives 
 ## Useful commands
 
  * `npm run cdk -- synth && npm run deploy`     Deploy project to AWS
- * ``npm run destroy`                           Remove project from AWS
+ * `npm run destroy`                           Remove project from AWS
